@@ -1,0 +1,1 @@
+pip install wyoming elevenlabs websockets soundfile numpy aiohttp
