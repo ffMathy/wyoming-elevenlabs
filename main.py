@@ -10,7 +10,7 @@ from wyoming.server import AsyncEventHandler                  # still the base-c
 RATE, WIDTH, CHANNELS = 16_000, 2, 1
 AGENT_ID = os.getenv("ELEVEN_AGENT_ID")
 API_KEY  = os.getenv("ELEVEN_API_KEY")
-VOICE_ID = os.getenv("ELEVEN_VOICE_ID", "Adam")
+VOICE_ID = os.getenv("ELEVEN_VOICE_ID")
 HEADERS  = {"xi-api-key": API_KEY} if API_KEY else {}
 
 WS_URL = (
@@ -20,8 +20,10 @@ WS_URL = (
 
 class Gateway(AsyncEventHandler):
     async def handle_event(self, event):
+        print(f"Received event: {event}")
+
         # ---------- TTS ----------
-        if event.is_type(Synthesize):
+        if Synthesize.is_type(event):
             text = Synthesize.from_event(event).text
             await self.write_event(AudioStart(rate=RATE, width=WIDTH, channels=CHANNELS))
             async with aiohttp.ClientSession(headers=HEADERS) as sess:
@@ -35,7 +37,7 @@ class Gateway(AsyncEventHandler):
             return True
 
         # ---------- Conversational (ASR + reply) ----------
-        if event.is_type(Transcribe):
+        if Transcribe.is_type(event):
             transcript = ""
             ws = await websockets.connect(WS_URL, extra_headers=HEADERS)
             await ws.send(json.dumps({

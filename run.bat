@@ -1,4 +1,6 @@
-python elevenlabs_wyoming_gateway.py \
-       --wyoming-port 10200 \
-       --eleven-api-key "<YOUR-ELEVENLABS-KEY>" \
-       --voice-id "eleven_multilingual_v2"
+@echo off
+
+SET ELEVEN_AGENT_ID="FfaCrKcbTjFdFZOfF1Vy"
+SET ELEVEN_VOICE_ID="ie80jFBMKZVYTQSzLxnp"
+
+python main.py
